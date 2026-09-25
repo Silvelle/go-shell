@@ -3,7 +3,8 @@
 *.dll
 *.so
 *.dylib
-bin/
+
+/go-shell
 # Test binary, built with `go test -c`
 *.test
 
