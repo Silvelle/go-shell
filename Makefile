@@ -1,5 +1,5 @@
 BIN := bin/repl
-SRC := ./
+SRC := ./cmd/emulator
 
 .PHONY: build
 
