@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-type test struct {
-	name     string
-	input    string
-	wantName string
-	wantArgs string
-}
-
 func TestParse(t *testing.T) {
 
 	tests := []struct {
