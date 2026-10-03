@@ -1,9 +1,9 @@
 package vfs
 
 import (
-"fmt"
-"os"
-"path/filepath"
+	"fmt"
+	"os"
+	"path/filepath"
 )
 
 // Load reads the directory at path and everything inside it into memory.

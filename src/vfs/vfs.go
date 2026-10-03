@@ -3,9 +3,9 @@
 package vfs
 
 import (
-"errors"
-"sort"
-"strings"
+	"errors"
+	"sort"
+	"strings"
 )
 
 // Errors returned by VFS operations. Their texts follow UNIX messages.
