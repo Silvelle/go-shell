@@ -1,3 +1,4 @@
+// Command emulator starts the UNIX shell emulator with a graphical interface.
 package main
 
 import (
@@ -6,6 +7,5 @@ import (
 )
 
 func main() {
-	sh := shell.New()
-	ui.Run(sh)
+	ui.Run(shell.New())
 }
