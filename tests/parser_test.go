@@ -8,63 +8,34 @@ import (
 )
 
 func TestParse(t *testing.T) {
-
 	tests := []struct {
 		name     string
 		input    string
 		wantName string
 		wantArgs []string
 	}{
+		{name: "empty line", input: "", wantName: "", wantArgs: []string{}},
+		{name: "whitespace only", input: "    \t   ", wantName: "", wantArgs: []string{}},
+		{name: "command without arguments", input: "ls", wantName: "ls", wantArgs: []string{}},
+		{name: "command with arguments", input: "ls -l /home", wantName: "ls", wantArgs: []string{"-l", "/home"}},
 		{
-			name:     "empty line",
-			input:    "",
-			wantName: "",
-			wantArgs: []string{},
-		},
-		{
-			name:     "whitespace only",
-			input:    "    \t   ",
-			wantName: "",
-			wantArgs: []string{},
-		},
-		{
-			name:     "command without arguments",
-			input:    "ls",
-			wantName: "ls",
-			wantArgs: []string{},
-		},
-		{
-			name:     "command with arguments",
-			input:    "ls  -l /home",
-			wantName: "ls",
-			wantArgs: []string{"-l", "/home"},
-		},
-		{
-			name:     "vsurroding and repeated spaces are collapsed",
-			input:    "cd /tmp",
+			name:     "surrounding and repeated spaces are collapsed",
+			input:    "   cd    /tmp   ",
 			wantName: "cd",
 			wantArgs: []string{"/tmp"},
 		},
-		{
-			name:     "tabs separete tokens like spaces",
-			input:    "ls\t-a",
-			wantName: "ls",
-			wantArgs: []string{"-a"},
-		},
+		{name: "tabs separate tokens like spaces", input: "ls\t-a", wantName: "ls", wantArgs: []string{"-a"}},
+		{name: "non-ASCII arguments", input: "cd папка", wantName: "cd", wantArgs: []string{"папка"}},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := shell.Parse(tt.input)
 			if err != nil {
-				t.Fatalf("Parse() error = %v", err)
+				t.Fatalf("Parse(%q) error = %v", tt.input, err)
 			}
-
 			if got.Name != tt.wantName {
-				t.Errorf("Parse().Name = %v, want %v", got.Name, tt.wantName)
-			}
-
-			if got.Args == nil {
-				t.Fatalf("Parse(%q).Args is nil, want a non-nil slice", tt.input)
+				t.Errorf("Parse(%q).Name = %q, want %q", tt.input, got.Name, tt.wantName)
 			}
 			if !reflect.DeepEqual(got.Args, tt.wantArgs) {
 				t.Errorf("Parse(%q).Args = %#v, want %#v", tt.input, got.Args, tt.wantArgs)
@@ -88,10 +59,10 @@ func TestCommandIsEmpty(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			got, err := shell.Parse(tt.input)
 			if err != nil {
-				t.Fatalf("Parse() error = %v", err)
+				t.Fatalf("Parse(%q) error = %v", tt.input, err)
 			}
 			if got.IsEmpty() != tt.want {
-				t.Errorf("Parse().IsEmpty() = %v, want %v", got.IsEmpty(), tt.want)
+				t.Errorf("Parse(%q).IsEmpty() = %v, want %v", tt.input, got.IsEmpty(), tt.want)
 			}
 		})
 	}

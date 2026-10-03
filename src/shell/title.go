@@ -6,25 +6,34 @@ import (
 	"os/user"
 )
 
-// unknown replaces a user or how  name that cannot be detected.
+// unknown replaces a user or host name that cannot be detected.
 const unknown = "unknown"
 
-// Title build th window title from a username and a host name.
+// Title builds the window title from a user name and a host name.
 func Title(username, hostname string) string {
 	return fmt.Sprintf("Эмулятор - [%s@%s]", username, hostname)
 }
 
-// SystemTitle return the window title for the user and host
+// SystemTitle returns the window title for the user and host
 // the emulator runs on.
 func SystemTitle() string {
-	name := unknown
-	if u, err := user.Current(); err == nil {
-		name = u.Username
-	}
+	return Title(CurrentUser(), CurrentHost())
+}
 
+// CurrentUser returns the name of the OS user running the emulator.
+func CurrentUser() string {
+	u, err := user.Current()
+	if err != nil {
+		return unknown
+	}
+	return u.Username
+}
+
+// CurrentHost returns the host name of the machine.
+func CurrentHost() string {
 	host, err := os.Hostname()
 	if err != nil {
-		host = unknown
+		return unknown
 	}
-	return Title(name, host)
+	return host
 }

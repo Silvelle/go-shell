@@ -1,0 +1,11 @@
+# Stage 2 startup script: every line is shown with its output.
+# Failing lines are reported and skipped.
+ls
+ls -l /home
+cd /tmp
+cd
+foo bar
+cd a b
+exit now
+ls still-running
+exit
