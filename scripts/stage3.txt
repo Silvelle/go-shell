@@ -1,0 +1,10 @@
+# Stage 3 startup script: commands from stages 1-2 with a VFS loaded.
+# The prompt shows the VFS name and the current directory.
+ls
+ls /home
+cd /home
+cd a b
+foo
+exit now
+ls still-running
+exit
