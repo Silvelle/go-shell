@@ -46,7 +46,7 @@ func TestLoggerWritesHeaderAndRows(t *testing.T) {
 	if rows[0][2] != "command" || rows[0][4] != "error" {
 		t.Errorf("header = %v", rows[0])
 	}
-	if rows[1][1] != "anna" || rows[1][2] != "ls" || rows[1][3] != "-l /home" || rows[1][4] != "" {
+	if rows[1][1] != "anna" || rows[1][2] != "ls" || rows[1][3] != "-l /home" || rows[1][4] != "-" {
 		t.Errorf("row 1 = %v", rows[1])
 	}
 	if rows[2][4] != "unknown command: foo" {
@@ -95,5 +95,25 @@ func TestShellLogsCommands(t *testing.T) {
 	}
 	if rows[2][2] != "foo" || rows[2][4] == "" {
 		t.Errorf("row for foo = %v, want an error message", rows[2])
+	}
+}
+
+func TestLoggerFillsEmptyFields(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "log.csv")
+	lg, err := logger.Open(path, "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	lg.Log("exit", nil, nil)
+	lg.Close()
+
+	row := readCSV(t, path)[1]
+	for i, field := range row {
+		if field == "" {
+			t.Errorf("field %d is empty in row %v, want \"-\"", i, row)
+		}
+	}
+	if row[1] != "-" || row[3] != "-" || row[4] != "-" {
+		t.Errorf("row = %v, want \"-\" for user, args and error", row)
 	}
 }

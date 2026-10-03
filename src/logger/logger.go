@@ -12,6 +12,9 @@ import (
 // filePerm is the permission mode of a newly created log file.
 const filePerm = 0o644
 
+// emptyField is written instead of an empty value, e.g. no arguments or no error.
+const emptyField = "-"
+
 // header is the first row of every log file.
 var header = []string{"time", "user", "command", "args", "error"}
 
@@ -53,11 +56,20 @@ func (l *Logger) Log(command string, args []string, cmdErr error) error {
 	}
 	return l.write([]string{
 		time.Now().Format(time.RFC3339),
-		l.user,
-		command,
-		strings.Join(args, " "),
-		message,
+		orPlaceholder(l.user),
+		orPlaceholder(command),
+		orPlaceholder(strings.Join(args, " ")),
+		orPlaceholder(message),
 	})
+}
+
+// orPlaceholder returns value, or emptyField if value is empty,
+// so that every column of the log is filled.
+func orPlaceholder(value string) string {
+	if value == "" {
+		return emptyField
+	}
+	return value
 }
 
 // Close closes the log file.
