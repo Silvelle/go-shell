@@ -1,7 +1,7 @@
-BIN := bin/repl
-SRC := ./cmd/emulator
+BIN := bin/emulator
+SRC := ./src
 
-.PHONY: build
+.PHONY: build run test clean
 
 build:
 	mkdir -p bin
@@ -9,6 +9,9 @@ build:
 
 run:
 	go run $(SRC)
+
+test:
+	go test -v ./...
 
 clean:
 	rm -rf bin

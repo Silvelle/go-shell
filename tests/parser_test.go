@@ -1,8 +1,10 @@
-package shell
+package tests
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/Silvelle/go-shell/src/shell"
 )
 
 func TestParse(t *testing.T) {
@@ -52,7 +54,7 @@ func TestParse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse(tt.input)
+			got, err := shell.Parse(tt.input)
 			if err != nil {
 				t.Fatalf("Parse() error = %v", err)
 			}
@@ -84,7 +86,7 @@ func TestCommandIsEmpty(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
-			got, err := Parse(tt.input)
+			got, err := shell.Parse(tt.input)
 			if err != nil {
 				t.Fatalf("Parse() error = %v", err)
 			}
