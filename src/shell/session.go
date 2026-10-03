@@ -7,9 +7,10 @@ import (
 	"strings"
 )
 
-// Prompt returns the text shown before every command.
+// Prompt returns the text shown before every command:
+// the VFS name and the current directory, e.g. "files:/docs$ ".
 func (s *Shell) Prompt() string {
-	return "$ "
+	return s.fs.Name + ":" + s.Cwd() + "$ "
 }
 
 // Interact echoes line after the prompt, runs it and prints its output
