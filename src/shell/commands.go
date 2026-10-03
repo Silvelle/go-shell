@@ -6,9 +6,6 @@ import (
 	"strings"
 )
 
-// maxCdArgs is the largest number of arguments cd accepts.
-const maxCdArgs = 1
-
 // ErrExit is returned by Execute when the user asks to leave the shell.
 // The caller (for example, the GUI) decides how to shut down.
 var ErrExit = errors.New("exit")
@@ -57,20 +54,6 @@ func (s *Shell) logEvent(cmd Command, err error) {
 	_ = s.logger.Log(cmd.Name, cmd.Args, err)
 }
 
-// ls is a stub that echoes its name and arguments.
-func (s *Shell) ls(args []string) (string, error) {
-	return stub("ls", args), nil
-}
-
-// cd is a stub that echoes its name and argument.
-// Like a real shell, it rejects more than one argument.
-func (s *Shell) cd(args []string) (string, error) {
-	if len(args) > maxCdArgs {
-		return "", fmt.Errorf("%w: cd: too many arguments", ErrInvalidArgs)
-	}
-	return stub("cd", args), nil
-}
-
 // exit asks the caller to end the session. It takes no arguments.
 func (s *Shell) exit(args []string) (string, error) {
 	if len(args) != 0 {
@@ -79,7 +62,13 @@ func (s *Shell) exit(args []string) (string, error) {
 	return "", ErrExit
 }
 
-// stub formats a command name and its arguments as one line.
-func stub(name string, args []string) string {
-	return strings.Join(append([]string{name}, args...), " ")
+// rejectOptions returns an error for the first argument that looks
+// like an option ("-x"), for commands that support no options.
+func rejectOptions(name string, args []string) error {
+	for _, a := range args {
+		if strings.HasPrefix(a, "-") {
+			return fmt.Errorf("%w: %s: invalid option '%s'", ErrInvalidArgs, name, a)
+		}
+	}
+	return nil
 }
