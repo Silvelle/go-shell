@@ -1,3 +1,4 @@
+// Package ui implements the graphical terminal window of the emulator.
 package ui
 
 import (
