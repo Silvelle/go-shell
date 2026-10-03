@@ -1,7 +1,7 @@
 BIN := bin/emulator
 SRC := ./src
 
-.PHONY: build run test clean
+.PHONY: build run test lint clean
 
 build:
 	mkdir -p bin
@@ -12,6 +12,9 @@ run:
 
 test:
 	go test -v ./...
+
+lint:
+	golangci-lint run ./...
 
 clean:
 	rm -rf bin
