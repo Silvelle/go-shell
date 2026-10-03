@@ -69,6 +69,7 @@ func (t *terminal) submit(line string) {
 	}
 }
 
+// print appends a line to the output area and scrolls to it.
 func (t *terminal) print(text string) {
 	t.output.SetText(t.output.Text() + text + "\n")
 	t.scroll.ScrollToBottom()
