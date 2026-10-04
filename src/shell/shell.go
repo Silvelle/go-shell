@@ -29,7 +29,6 @@ func New() *Shell {
 		"rev":  s.rev,
 		"exit": s.exit,
 		"find": s.find,
-
 	}
 	s.SetVFS(vfs.Default())
 	return s
