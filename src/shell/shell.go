@@ -27,6 +27,7 @@ func New() *Shell {
 		"ls":   s.ls,
 		"cd":   s.cd,
 		"exit": s.exit,
+		"rev":  s.rev,
 	}
 	s.SetVFS(vfs.Default())
 	return s
