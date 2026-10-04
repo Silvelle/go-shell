@@ -9,7 +9,6 @@ import (
 	"github.com/Silvelle/go-shell/src/vfs"
 )
 
-
 func TestLs(t *testing.T) {
 	tests := []struct {
 		name  string
