@@ -11,7 +11,9 @@
 
 ## Сборка и запуск
 
-Требуется Go 1.27+ и компилятор C (для Fyne).
+Требуется Go 1.27+ и компилятор C (для Fyne). В Ubuntu/Debian также нужны
+пакеты `libgl1-mesa-dev xorg-dev libxkbcommon-dev libwayland-dev`;
+в Arch Linux они обычно уже установлены.
 
 ```bash
 make build   # собрать в bin/emulator
@@ -55,6 +57,8 @@ Makefile         сборка, запуск, тесты, линтер
 | `ls [арг...]` | Заглушка: выводит имя и аргументы                  | `ls -l /home` |
 | `cd [путь]`   | Заглушка: выводит имя и аргумент (не более одного) | `cd /tmp`     |
 | `exit`        | Закрывает эмулятор (аргументы запрещены)           | `exit`        |
+
+На этапе 4 заглушки `ls` и `cd` заменены настоящими командами.
 
 Пример:
 
@@ -169,10 +173,10 @@ scripts/test_commands.sh   # все режимы ls, cd, rev, find на vfs/deep
 Команды изменяют только VFS в памяти; директория на диске остаётся
 без изменений.
 
-| Команда                   | Описание                                                        | Пример                  |
-|---------------------------|-----------------------------------------------------------------|-------------------------|
-| `rm [-r] путь...`         | Удаляет файлы; директории — только с `-r` (или `-R`)            | `rm -r docs`            |
-| `mv источник назначение`  | Переименовывает или перемещает; в существующую папку — внутрь неё | `mv a.txt docs/b.txt` |
+| Команда                  | Описание                                                          | Пример                |
+|--------------------------|-------------------------------------------------------------------|-----------------------|
+| `rm [-r] путь...`        | Удаляет файлы; директории — только с `-r` (или `-R`)              | `rm -r docs`          |
+| `mv источник назначение` | Переименовывает или перемещает; в существующую папку — внутрь неё | `mv a.txt docs/b.txt` |
 
 Ошибки: удаление корня, удаление директории без `-r`, удаление папки,
 внутри которой находится текущая директория, перемещение папки внутрь
@@ -181,3 +185,56 @@ scripts/test_commands.sh   # все режимы ls, cd, rev, find на vfs/deep
 ```bash
 scripts/test_modify.sh   # все режимы rm и mv на vfs/deep
 ```
+
+## Примеры использования
+
+### Запуск
+
+```bash
+make build
+./bin/emulator                                   # VFS по умолчанию, без лога
+./bin/emulator --vfs vfs/deep                    # VFS из директории
+./bin/emulator --vfs vfs/deep --log log.csv      # с журналом команд
+./bin/emulator --config configs/emulator.ini     # параметры из INI-файла
+./bin/emulator --config configs/emulator.ini --vfs vfs/deep   # флаг важнее файла
+./bin/emulator --vfs vfs/deep --script scripts/stage4.txt     # стартовый скрипт
+```
+
+### Навигация и поиск (`--vfs vfs/deep`)
+
+```
+deep:/$ ls
+etc/  home/  var/
+deep:/$ cd home/user
+deep:/home/user$ ls
+docs/  hello.txt
+deep:/home/user$ rev hello.txt
+olleh
+dlrow
+deep:/home/user$ find / -name *.txt
+/home/user/docs/drafts/draft1.txt
+/home/user/docs/drafts/draft2.txt
+/home/user/docs/report.txt
+/home/user/hello.txt
+deep:/home/user$ cd /etc/config
+error: cd: /etc/config: not a directory
+```
+
+### Изменение VFS в памяти (`--vfs vfs/deep`)
+
+```
+deep:/$ mv /home/user/hello.txt /etc
+deep:/$ ls /etc
+config  hello.txt
+deep:/$ rm /home/user/docs
+error: rm: cannot remove '/home/user/docs': is a directory
+deep:/$ rm -r /home/user/docs
+deep:/$ find /home
+/home
+/home/user
+deep:/$ rm -r /
+error: rm: cannot remove '/': cannot change the root directory
+deep:/$ exit
+```
+
+После выхода директория `vfs/deep` на диске остаётся без изменений.
