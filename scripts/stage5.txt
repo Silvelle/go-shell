@@ -1,0 +1,37 @@
+# Stage 5 startup script for vfs/deep: rm and mv change the VFS in memory only.
+find /
+# --- mv
+mv /home/user/hello.txt /home/user/greeting.txt
+ls /home/user
+mv /home/user/greeting.txt /etc
+ls /etc
+mv /etc/greeting.txt /var/log/hi.txt
+ls /var/log
+mv /home/user/docs/drafts /home/user
+find /home/user
+cd /home/user/drafts
+mv /home/user /home/me
+cd /
+find /home
+mv /etc/config /etc/config
+mv nope /etc
+mv /home /home/me
+mv /var /etc/config
+mv /etc/config /nope/x
+mv onlyone
+# --- rm
+rm /var/log/hi.txt
+ls /var/log
+rm /etc/config /nope
+ls /etc
+rm /home/me/docs
+rm -r /home/me/docs
+find /home
+cd /home/me/drafts
+rm -r /home
+cd /
+rm -r /
+rm
+rm -r /var
+ls
+exit
