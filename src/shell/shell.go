@@ -26,7 +26,9 @@ func New() *Shell {
 	s.handlers = map[string]handler{
 		"ls":   s.ls,
 		"cd":   s.cd,
+		"rev":  s.rev,
 		"exit": s.exit,
+		"find": s.find,
 	}
 	s.SetVFS(vfs.Default())
 	return s

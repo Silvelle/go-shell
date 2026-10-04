@@ -1,0 +1,37 @@
+# Stage 4 startup script for vfs/deep: ls, cd, rev, find.
+# --- ls
+ls
+ls /home/user
+ls home/user/docs etc
+ls home/user/hello.txt
+ls nope home
+ls -l
+# --- cd
+cd home/user
+ls
+cd docs/drafts
+cd ../..
+cd ..
+cd ../../..
+cd
+cd ~/home/user/docs
+cd /nope
+cd /etc/config
+cd a b
+# --- rev
+cd /home/user
+rev hello.txt
+rev docs/report.txt hello.txt
+rev
+rev docs
+rev nope hello.txt
+# --- find
+cd /
+find home/user
+find / -name *.txt
+find -name draft?.txt
+find /var
+find nope
+find -name
+find . -size 10
+exit
