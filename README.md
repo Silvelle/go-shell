@@ -12,12 +12,23 @@
 ## Сборка и запуск
 
 Требуется Go 1.27+ и компилятор C (для Fyne). В Ubuntu/Debian также нужны
-пакеты `libgl1-mesa-dev xorg-dev libxkbcommon-dev libwayland-dev`;
-в Arch Linux они обычно уже установлены.
+пакеты `libgl1-mesa-dev xorg-dev`; в Arch Linux они обычно уже установлены.
+
+`make build` сам выбирает графическую подсистему Linux: если установлены
+заголовки Wayland (`libwayland-dev`), собираются X11 и Wayland; если нет —
+только X11, которая работает и в Wayland-окружениях через XWayland.
+Выбрать вручную: `make build TAGS=x11` или `make build TAGS=`.
+
+Windows (без `make`; нужны Go и компилятор C, например WinLibs):
+
+```powershell
+.\run.bat --vfs vfs\deep
+```
 
 ```bash
 make build   # собрать в bin/emulator
-make run     # запустить
+make run     # собрать и запустить
+make run ARGS="--vfs vfs/deep --log log.csv"   # запустить с параметрами
 make test    # запустить тесты
 make lint    # проверить стиль кода (нужен golangci-lint)
 make clean   # удалить bin/
